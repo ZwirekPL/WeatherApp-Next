@@ -1,1 +1,0 @@
-# WeatherApp-Next.js
