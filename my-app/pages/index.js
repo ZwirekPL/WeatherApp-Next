@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import axios from "axios";
-import { use, useState } from "react";
+import { useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import Weather from "../components/Weather.jsx";
 import Spinner from "../components/Spinner.jsx";
@@ -10,14 +10,38 @@ export default function Home() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState({});
   const [loading, setLoading] = useState(false);
+  const [lat, setLat] = useState("");
+  const [lon, setLon] = useState("");
 
+  const urlLoc = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}&lang=pl&units=metric`;
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}&lang=pl&units=metric`;
 
-  const handle = (e) => {
+  const getLoc = () => {
+    navigator.geolocation
+      ? navigator.geolocation.getCurrentPosition(getCoordinates)
+      : alert("Geolocation is not supported by this browser.");
+  };
+  const getCoordinates = (coordinates) => {
+    setLat(`${coordinates.coords.latitude.toFixed(4)}`);
+    setLon(`${coordinates.coords.longitude.toFixed(4)}`);
+
+    setLoading(true);
+    axios.get(urlLoc).then(
+      (res) => {
+        setWeather(res.data);
+        console.log(res.data);
+      },
+      (err) => {
+        console.log(err.data);
+      }
+    );
+    setCity("");
+    setLoading(false);
+  };
+  const handleChange = (e) => {
     setCity(e.target.value);
     console.log(e.target.value);
   };
-
   const fetchWeather = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -33,6 +57,8 @@ export default function Home() {
     setCity("");
     setLoading(false);
   };
+
+  console.log(lon, lat);
   if (loading) {
     return <Spinner />;
   } else {
@@ -45,7 +71,16 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <div className="absolute top-0 left-0 right-0 bottom-0 bg-black/40 z-[1]" />
-        <div className="relative flex justify-between items-center max-w-[500px] w-full m-auto pt-4 px-4 text-white z-10">
+        <div className="relative flex justify-between items-center max-w-[500px] w-full m-auto pt-4 px-4 text-white z-10 ">
+          <button
+            className="relative flex justify-center items-center max-w-[200px] w-full m-auto text-white z-10 bg-transparent border border-gray-300 text-white rounded-2xl hover:bg-green-700"
+            onClick={getLoc}
+          >
+            <p className="pr-4">Zlokalizuj mnie</p>
+            <BsSearch size={20} />
+          </button>
+        </div>
+        <div className="relative flex flex-col justify-between items-center max-w-[500px] w-full m-auto pt-4 px-4 text-white z-10">
           <form
             onSubmit={fetchWeather}
             className="flex justify-between items-center w-full m-auto p-2 bg-transparent border border-gray-300 text-white rounded-2xl"
@@ -55,7 +90,7 @@ export default function Home() {
                 placeholder="wyszukaj miasto"
                 type="text"
                 className="bg-transparent border-none text-white focus:outline-none text-2xl"
-                onChange={handle}
+                onChange={handleChange}
               />
               <button onClick={fetchWeather}>
                 <BsSearch size={20} />
