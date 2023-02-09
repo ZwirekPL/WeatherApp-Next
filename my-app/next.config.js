@@ -7,4 +7,8 @@ module.exports = {
   images: {
     domains: ["images.unsplash.com", "openweathermap.org"],
   },
+  i18n: {
+    locales: ["pl"],
+    defaultLocale: "pl",
+  },
 };
