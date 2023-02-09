@@ -60,21 +60,22 @@ export default function Home() {
       </Head>
       <div className="absolute top-0 left-0 right-0 bottom-0 bg-black/40 z-[1]" />
       <Image src={bgImg} fill className="object-cover" alt="/" />
-      <div className="relative flex justify-between items-center max-w-[500px] w-full m-auto pt-4 px-4 text-white z-10 ">
-        {click && (
-          <div className="bg-black/60 border border-slate-700 rounded-md p-1 m-auto">
-            <p className="text-xs">Kliknij ponownie aby wyświetlić pogodę</p>
-          </div>
-        )}
-        <button
-          className="relative flex justify-center items-center max-w-[200px] w-full m-auto text-white z-10 bg-transparent border border-gray-300 rounded-md hover:bg-green-700/80 "
-          onClick={getLoc}
-        >
-          <p className="pr-4">Zlokalizuj mnie</p>
-          <BsSearch size={20} />
-        </button>
-      </div>
-      <div className="relative flex flex-col justify-between items-center max-w-[500px] w-full m-auto pt-4 px-4 text-white z-10">
+      {/* PORTRAIT */}
+      <div className="relative flex flex-col justify-between items-center max-w-[500px] w-full m-auto pt-4 px-4 text-white z-10 landscape:hidden">
+        <div className="relative flex justify-between items-center max-w-[500px] w-full m-auto pb-4 text-white z-10 landscape:hidden ">
+          {click && (
+            <div className="bg-black/60 border border-slate-700 rounded-md p-1 m-auto">
+              <p className="text-xs">Kliknij ponownie aby wyświetlić pogodę</p>
+            </div>
+          )}
+          <button
+            className="relative flex justify-center items-center max-w-[200px] w-full m-auto text-white z-10 bg-transparent border border-gray-300 rounded-md hover:bg-green-700/80 "
+            onClick={getLoc}
+          >
+            <p className="pr-4">Zlokalizuj mnie</p>
+            <BsSearch size={20} />
+          </button>
+        </div>
         <form
           onSubmit={fetchWeather}
           className="flex justify-between items-center w-full m-auto p-2 bg-transparent border border-gray-300 text-white rounded-md"
@@ -83,7 +84,41 @@ export default function Home() {
             <input
               placeholder="Wyszukaj miasto"
               type="text"
-              className="bg-transparent border-none text-white placeholder:text-white focus:outline-none text-2xl"
+              className="bg-transparent border-none text-white w-full text-transform: capitalize placeholder:text-white focus:outline-none text-2xl"
+              onChange={handleChange}
+            />
+            <button onClick={fetchWeather}>
+              <BsSearch size={20} />
+            </button>
+          </div>
+        </form>
+        {weather.main && <Weather data={weather} />}
+      </div>
+      {/* LANDSCAPE */}
+      <div className="relative flex flex-col justify-between items-center max-h-screen max-w-[650px] w-full m-auto pt-2 px-2 text-white z-10 portrait:hidden">
+        <div className="relative flex justify-between items-center max-w-[650px] w-full m-auto pb-4 text-white z-10 portrait:hidden ">
+          {click && (
+            <div className="bg-black/60 border border-slate-700 rounded-md p-1 m-auto">
+              <p className="text-xs">Kliknij ponownie aby wyświetlić pogodę</p>
+            </div>
+          )}
+          <button
+            className="relative flex justify-center items-center max-w-[250px] w-full m-auto text-white z-10 bg-transparent border border-gray-300 rounded-md hover:bg-green-700/80 "
+            onClick={getLoc}
+          >
+            <p className="pr-4">Zlokalizuj mnie</p>
+            <BsSearch size={20} />
+          </button>
+        </div>
+        <form
+          onSubmit={fetchWeather}
+          className="flex justify-between items-center max-h-min w-full m-auto p-2 bg-transparent border border-gray-300 text-white rounded-md"
+        >
+          <div className="flex flex-row justify-between w-full">
+            <input
+              placeholder="Wyszukaj miasto"
+              type="text"
+              className="bg-transparent border-none text-white w-full text-transform: capitalize placeholder:text-white focus:outline-none text-1xl "
               onChange={handleChange}
             />
             <button onClick={fetchWeather}>
